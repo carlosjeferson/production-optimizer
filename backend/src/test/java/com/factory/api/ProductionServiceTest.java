@@ -1,4 +1,4 @@
-package com.factory.api.service;
+package com.factory.api;
 
 import com.factory.api.dto.ProductionSuggestionDTO;
 import com.factory.api.model.Product;
