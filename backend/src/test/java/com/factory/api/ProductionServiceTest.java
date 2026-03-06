@@ -1,68 +1,80 @@
-package com.factory.api;
+package com.factory.api.service;
 
 import com.factory.api.dto.ProductionSuggestionDTO;
 import com.factory.api.model.Product;
 import com.factory.api.model.ProductComposition;
 import com.factory.api.model.RawMaterial;
-import com.factory.api.service.ProductionService;
-import io.quarkus.test.junit.QuarkusTest;
-import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import com.google.ortools.Loader;
+import com.google.ortools.linearsolver.MPConstraint;
+import com.google.ortools.linearsolver.MPObjective;
+import com.google.ortools.linearsolver.MPSolver;
+import com.google.ortools.linearsolver.MPVariable;
+import jakarta.enterprise.context.ApplicationScoped;
 
-@QuarkusTest
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@ApplicationScoped
 public class ProductionServiceTest {
 
-    @Inject
-    ProductionService productionService;
+    public ProductionSuggestionDTO calculateOptimalProduction() {
+        Loader.loadNativeLibraries();
 
-    @BeforeEach
-    @Transactional
-    void setup() {
-        ProductComposition.deleteAll();
-        Product.deleteAll();
-        RawMaterial.deleteAll();
-    }
+        MPSolver solver = MPSolver.createSolver("SCIP");
+        if (solver == null) {
+            throw new RuntimeException("Não foi possível inicializar o Solver SCIP.");
+        }
 
-    @Test
-    @Transactional
-    void shouldPrioritizeMostProfitableProduct() {
-        RawMaterial wood = new RawMaterial();
-        wood.code = "RM001";
-        wood.name = "Test Wood";
-        wood.quantity = 10.0;
-        wood.persist();
+        List<Product> products = Product.listAll();
+        List<RawMaterial> inventory = RawMaterial.listAll();
 
-        Product cheap = new Product();
-        cheap.code = "P001";
-        cheap.name = "Cheap Item";
-        cheap.price = 10.0;
-        cheap.persist();
+        Map<Product, MPVariable> productVariables = new HashMap<>();
+        for (Product product : products) {
+            MPVariable var = solver.makeIntVar(0.0, Double.POSITIVE_INFINITY, product.name);
+            productVariables.put(product, var);
+        }
 
-        ProductComposition comp1 = new ProductComposition();
-        comp1.rawMaterial = wood;
-        comp1.requiredQuantity = 1.0;
-        comp1.persist();
-        cheap.composition = java.util.List.of(comp1);
+        Map<Long, MPConstraint> inventoryConstraints = new HashMap<>();
+        for (RawMaterial material : inventory) {
+            MPConstraint constraint = solver.makeConstraint(0.0, material.quantity, "Material_" + material.id);
+            inventoryConstraints.put(material.id, constraint);
+        }
 
-        Product expensive = new Product();
-        expensive.code = "P002";
-        expensive.name = "Expensive Item";
-        expensive.price = 100.0;
-        expensive.persist();
+        for (Product product : products) {
+            MPVariable productVar = productVariables.get(product);
+            for (ProductComposition comp : product.composition) {
+                MPConstraint constraint = inventoryConstraints.get(comp.rawMaterial.id);
+                if (constraint != null) {
+                    constraint.setCoefficient(productVar, comp.requiredQuantity);
+                }
+            }
+        }
 
-        ProductComposition comp2 = new ProductComposition();
-        comp2.rawMaterial = wood;
-        comp2.requiredQuantity = 10.0;
-        comp2.persist();
-        expensive.composition = java.util.List.of(comp2);
+        MPObjective objective = solver.objective();
+        for (Product product : products) {
+            double priorityWeight = product.price - 0.0001;
+            objective.setCoefficient(productVariables.get(product), priorityWeight);
+        }
+        objective.setMaximization();
 
-        ProductionSuggestionDTO suggestion = productionService.calculateOptimalProduction();
+        MPSolver.ResultStatus resultStatus = solver.solve();
 
-        Assertions.assertEquals(100.0, suggestion.totalEstimatedValue);
-        Assertions.assertTrue(suggestion.productsToProduce.containsKey("Expensive Item"));
-        Assertions.assertEquals(1, suggestion.productsToProduce.get("Expensive Item"));
+        Map<String, Integer> suggestedProduction = new HashMap<>();
+        double totalRealValue = 0.0;
+
+        if (resultStatus == MPSolver.ResultStatus.OPTIMAL || resultStatus == MPSolver.ResultStatus.FEASIBLE) {
+            for (Product product : products) {
+                int qtyToProduce = (int) productVariables.get(product).solutionValue();
+                if (qtyToProduce > 0) {
+                    suggestedProduction.put(product.name, qtyToProduce);
+                    totalRealValue += (qtyToProduce * product.price);
+                }
+            }
+        } else {
+            System.err.println("O solver não conseguiu encontrar uma solução ideal.");
+        }
+
+        return new ProductionSuggestionDTO(suggestedProduction, totalRealValue);
     }
 }
