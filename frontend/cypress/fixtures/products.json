@@ -1,0 +1,19 @@
+[
+  {
+    "id": 101,
+    "code": "PRD-001",
+    "name": "Cadeira Gamer Premium",
+    "price": 1250.00,
+    "composition": [
+      { "id": 10, "rawMaterial": { "id": 1 }, "requiredQuantity": 1 },
+      { "id": 11, "rawMaterial": { "id": 2 }, "requiredQuantity": 8 }
+    ]
+  },
+  {
+    "id": 102,
+    "code": "PRD-002",
+    "name": "Mesa de Escritório",
+    "price": 850.50,
+    "composition": []
+  }
+]
