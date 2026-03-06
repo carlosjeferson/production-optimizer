@@ -8,7 +8,7 @@ Este projeto é uma solução Full-Stack desenvolvida para otimizar a linha de p
 O projeto foi construído seguindo boas práticas de Clean Code, com separação clara de responsabilidades e alta cobertura de testes.
 
 ### 🔙 Back-end
-* **Linguagem:** Java
+* **Linguagem:** Java 21
 * **Framework:** Quarkus (com RESTEasy Jackson e Arc)
 * **Banco de Dados:** PostgreSQL (com Quarkus Hibernate ORM Panache)
 * **Otimização Matemática:** Google OR-Tools (Programação Linear)
@@ -48,7 +48,7 @@ Certifique-se de ter instalado em sua máquina:
 1. Clone o repositório:
 
 ```bash
-git clone [https://github.com/seu-usuario/seu-repositorio.git](https://github.com/seu-usuario/seu-repositorio.git)
+git clone [https://github.com/carlosjeferson/production-optimizer.git](https://github.com/carlosjeferson/production-optimizer)
 ```
 
 2. Acesse a pasta do back-end (ajuste o nome da pasta conforme seu projeto):
