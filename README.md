@@ -46,7 +46,7 @@ Certifique-se de ter instalado em sua máquina:
 1. Clone o repositório:
 
 ```bash
-git clone [https://github.com/carlosjeferson/production-optimizer.git](https://github.com/carlosjeferson/production-optimizer)
+git clone https://github.com/carlosjeferson/production-optimizer.git ou https://github.com/carlosjeferson/production-optimizer
 ```
 
 2. Acesse a pasta do back-end (ajuste o nome da pasta conforme seu projeto):
