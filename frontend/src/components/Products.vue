@@ -328,7 +328,6 @@ onMounted(fetchAll);
 <style scoped>
 .page-container * { box-sizing: border-box; }
 
-/* Design System Professional */
 .page-container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; font-family: 'Inter', system-ui, sans-serif; }
 
 /* Headers */

@@ -1,7 +1,6 @@
 describe('Módulo de Insumos Industriais', () => {
   
   beforeEach(() => {
-    // Intercepta a lista de insumos com um Mock
     cy.intercept('GET', '**/raw-materials', {
       body: [
         { id: 1, code: 'RM-001', name: 'Aço Carbono', quantity: 50 },
@@ -9,7 +8,7 @@ describe('Módulo de Insumos Industriais', () => {
       ]
     }).as('getMaterials');
 
-    cy.visit('/'); // Abre direto em Insumos conforme seu App.vue
+    cy.visit('/'); 
     cy.wait('@getMaterials');
   });
 
@@ -34,10 +33,8 @@ describe('Módulo de Insumos Industriais', () => {
   it('Deve editar um insumo existente e verificar o scroll', () => {
     cy.intercept('PUT', '**/raw-materials/*', { statusCode: 200 }).as('putMaterial');
 
-    // Clica no botão editar da primeira linha (Aço Carbono)
     cy.get('.action-btn.edit').first().click();
 
-    // Valida se o formulário entrou em modo edição e o scroll subiu
     cy.get('.section-title').should('contain', 'Editar Insumo');
     cy.window().its('scrollY').should('equal', 0);
 
@@ -49,7 +46,6 @@ describe('Módulo de Insumos Industriais', () => {
   });
 
   it('Deve exibir erro ao tentar excluir item vinculado a um produto', () => {
-    // Simula erro 400 que seu catch no Vue já trata (item em uso)
     cy.intercept('DELETE', '**/raw-materials/*', {
       statusCode: 400,
       body: { message: 'Item em uso' }
