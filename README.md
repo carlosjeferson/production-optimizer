@@ -41,7 +41,6 @@ Certifique-se de ter instalado em sua máquina:
 * **Node.js** (versão 18+ recomendada) e **NPM**
 * **PostgreSQL** rodando localmente (ou via Docker)
 
-```
 ### 1. Rodando o Back-end (Quarkus)
 
 1. Clone o repositório:
