@@ -37,8 +37,8 @@ O projeto foi construído seguindo boas práticas de Clean Code, com separação
 
 ### Pré-requisitos
 Certifique-se de ter instalado em sua máquina:
-* **Java 17+** e **Maven**
-* **Node.js** (versão 18+ recomendada) e **NPM**
+* **Java 21+** e **Maven**
+* **Node.js** (versão 22+ recomendada) e **NPM** 10+
 * **PostgreSQL** rodando localmente (ou via Docker)
 
 ### 1. Rodando o Back-end (Quarkus)
