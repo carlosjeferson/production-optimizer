@@ -74,7 +74,7 @@ public class ProductResourceTest {
         given()
                 .when().delete("/products/" + productId)
                 .then()
-                .statusCode(200); // Ou 204 dependendo do seu Resource
+                .statusCode(200);
 
         given()
                 .when().get("/products")
