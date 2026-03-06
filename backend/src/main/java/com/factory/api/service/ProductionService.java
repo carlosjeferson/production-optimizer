@@ -19,10 +19,8 @@ import java.util.Map;
 public class ProductionService {
 
     public ProductionSuggestionDTO calculateOptimalProduction() {
-        // 1. Carrega as bibliotecas nativas do Google OR-Tools (obrigatório)
         Loader.loadNativeLibraries();
 
-        // 2. Cria o solver usando o backend SCIP (excelente para números inteiros)
         MPSolver solver = MPSolver.createSolver("SCIP");
         if (solver == null) {
             throw new RuntimeException("Não foi possível inicializar o Solver SCIP.");
@@ -31,52 +29,41 @@ public class ProductionService {
         List<Product> products = Product.listAll();
         List<RawMaterial> inventory = RawMaterial.listAll();
 
-        // 3. VARIÁVEIS: O que queremos descobrir? (Quantos de cada produto fabricar)
-        // Guardamos as variáveis em um mapa para recuperar o resultado depois
         Map<Product, MPVariable> productVariables = new HashMap<>();
         for (Product product : products) {
-            // makeIntVar(min, max, nome) -> Garante que não vamos fabricar produtos "quebrados" ou negativos
             MPVariable var = solver.makeIntVar(0.0, Double.POSITIVE_INFINITY, product.name);
             productVariables.put(product, var);
         }
 
-        // 4. RESTRIÇÕES: O que nos limita? (Nosso estoque de matéria-prima)
         Map<Long, MPConstraint> inventoryConstraints = new HashMap<>();
         for (RawMaterial material : inventory) {
-            // constraint(min, max, nome) -> O uso do material não pode passar da quantidade que temos
             MPConstraint constraint = solver.makeConstraint(0.0, material.quantity, "Material_" + material.id);
             inventoryConstraints.put(material.id, constraint);
         }
 
-        // Vinculando a composição dos produtos às restrições de estoque
         for (Product product : products) {
             MPVariable productVar = productVariables.get(product);
             for (ProductComposition comp : product.composition) {
                 MPConstraint constraint = inventoryConstraints.get(comp.rawMaterial.id);
                 if (constraint != null) {
-                    // Ex: constraint.setCoefficient(VarProdutoMadeira, 10)
                     constraint.setCoefficient(productVar, comp.requiredQuantity);
                 }
             }
         }
 
-        // 5. OBJETIVO: O que queremos maximizar? (O lucro total)
         MPObjective objective = solver.objective();
         for (Product product : products) {
             objective.setCoefficient(productVariables.get(product), product.price);
         }
         objective.setMaximization();
 
-        // 6. RESOLUÇÃO: Manda o motor matemático encontrar a melhor resposta
         MPSolver.ResultStatus resultStatus = solver.solve();
 
         Map<String, Integer> suggestedProduction = new HashMap<>();
         double totalValue = 0.0;
 
-        // 7. EXTRAÇÃO DOS RESULTADOS
         if (resultStatus == MPSolver.ResultStatus.OPTIMAL || resultStatus == MPSolver.ResultStatus.FEASIBLE) {
             for (Product product : products) {
-                // Pega o valor calculado pelo solver para esta variável
                 int qtyToProduce = (int) productVariables.get(product).solutionValue();
                 if (qtyToProduce > 0) {
                     suggestedProduction.put(product.name, qtyToProduce);
