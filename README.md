@@ -1,4 +1,3 @@
-```markdown
 # 🏭 Gerenciamento e Otimização de Produção Industrial
 
 Este projeto é uma solução Full-Stack desenvolvida para otimizar a linha de produção de uma fábrica. O sistema gerencia o estoque de matérias-primas e a composição de produtos, possuindo um motor de otimização que analisa o inventário atual e sugere o plano de produção ideal para obter o **maior lucro possível**, resolvendo conflitos de insumos de forma inteligente.
