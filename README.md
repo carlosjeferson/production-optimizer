@@ -33,6 +33,11 @@ O projeto foi construído seguindo boas práticas de Clean Code, com separação
 
 ---
 
+<img width="1902" height="908" alt="image" src="https://github.com/user-attachments/assets/73ee023f-3691-4290-a01c-2f53bbd77e1b" />
+<img width="1900" height="904" alt="image" src="https://github.com/user-attachments/assets/27fb7c85-ab82-44fa-b16b-6a24260546d8" />
+<img width="1889" height="895" alt="image" src="https://github.com/user-attachments/assets/3b281184-8ab1-429b-8b96-1c0734583a1e" />
+
+
 ## 🛠️ Como executar o projeto localmente
 
 ### Pré-requisitos
