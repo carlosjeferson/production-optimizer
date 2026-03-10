@@ -1,4 +1,3 @@
-```markdown
 # 🏭 Gerenciamento e Otimização de Produção Industrial
 
 Este projeto é uma solução Full-Stack desenvolvida para otimizar a linha de produção de uma fábrica. O sistema gerencia o estoque de matérias-primas e a composição de produtos, possuindo um motor de otimização que analisa o inventário atual e sugere o plano de produção ideal para obter o **maior lucro possível**, resolvendo conflitos de insumos de forma inteligente.
@@ -34,21 +33,25 @@ O projeto foi construído seguindo boas práticas de Clean Code, com separação
 
 ---
 
+<img width="1902" height="908" alt="image" src="https://github.com/user-attachments/assets/73ee023f-3691-4290-a01c-2f53bbd77e1b" />
+<img width="1900" height="904" alt="image" src="https://github.com/user-attachments/assets/27fb7c85-ab82-44fa-b16b-6a24260546d8" />
+<img width="1889" height="895" alt="image" src="https://github.com/user-attachments/assets/3b281184-8ab1-429b-8b96-1c0734583a1e" />
+
+
 ## 🛠️ Como executar o projeto localmente
 
 ### Pré-requisitos
 Certifique-se de ter instalado em sua máquina:
-* **Java 17+** e **Maven**
-* **Node.js** (versão 18+ recomendada) e **NPM**
+* **Java 21+** e **Maven**
+* **Node.js** (versão 22+ recomendada) e **NPM** 10+
 * **PostgreSQL** rodando localmente (ou via Docker)
 
-```
 ### 1. Rodando o Back-end (Quarkus)
 
 1. Clone o repositório:
 
 ```bash
-git clone [https://github.com/carlosjeferson/production-optimizer.git](https://github.com/carlosjeferson/production-optimizer)
+git clone https://github.com/carlosjeferson/production-optimizer.git ou https://github.com/carlosjeferson/production-optimizer
 ```
 
 2. Acesse a pasta do back-end (ajuste o nome da pasta conforme seu projeto):
