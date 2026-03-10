@@ -2,6 +2,10 @@
 
 Este projeto é uma solução Full-Stack de alto nível desenvolvida para resolver um dos maiores desafios da gestão industrial: a **alocação otimizada de recursos**. O sistema não apenas gerencia o estoque, mas utiliza um motor de **Programação Linear** para decidir matematicamente o que produzir para maximizar o retorno financeiro.
 
+<img width="1902" height="908" alt="image" src="https://github.com/user-attachments/assets/73ee023f-3691-4290-a01c-2f53bbd77e1b" />
+<img width="1900" height="904" alt="image" src="https://github.com/user-attachments/assets/27fb7c85-ab82-44fa-b16b-6a24260546d8" />
+<img width="1889" height="895" alt="image" src="https://github.com/user-attachments/assets/3b281184-8ab1-429b-8b96-1c0734583a1e" />
+
 ## 🧠 O Diferencial de P&D: Motor de Otimização
 
 Diferente de abordagens baseadas em regras simples (como ordenar por preço), este projeto utiliza o **Google OR-Tools** com o solver **SCIP**.
