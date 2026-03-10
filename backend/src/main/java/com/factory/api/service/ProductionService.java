@@ -31,29 +31,29 @@ public class ProductionService {
 
         Map<Product, MPVariable> productVariables = new HashMap<>();
         for (Product product : products) {
-            MPVariable var = solver.makeIntVar(0.0, Double.POSITIVE_INFINITY, product.name);
+            MPVariable var = solver.makeIntVar(0.0, Double.POSITIVE_INFINITY, product.getName());
             productVariables.put(product, var);
         }
 
         Map<Long, MPConstraint> inventoryConstraints = new HashMap<>();
         for (RawMaterial material : inventory) {
-            MPConstraint constraint = solver.makeConstraint(0.0, material.quantity, "Material_" + material.id);
+            MPConstraint constraint = solver.makeConstraint(0.0, material.getQuantity(), "Material_" + material.id);
             inventoryConstraints.put(material.id, constraint);
         }
 
         for (Product product : products) {
             MPVariable productVar = productVariables.get(product);
-            for (ProductComposition comp : product.composition) {
-                MPConstraint constraint = inventoryConstraints.get(comp.rawMaterial.id);
+            for (ProductComposition comp : product.getComposition()) {
+                MPConstraint constraint = inventoryConstraints.get(comp.getRawMaterial().id);
                 if (constraint != null) {
-                    constraint.setCoefficient(productVar, comp.requiredQuantity);
+                    constraint.setCoefficient(productVar, comp.getRequiredQuantity());
                 }
             }
         }
 
         MPObjective objective = solver.objective();
         for (Product product : products) {
-            objective.setCoefficient(productVariables.get(product), product.price);
+            objective.setCoefficient(productVariables.get(product), product.getPrice());
         }
         objective.setMaximization();
 
@@ -66,12 +66,10 @@ public class ProductionService {
             for (Product product : products) {
                 int qtyToProduce = (int) productVariables.get(product).solutionValue();
                 if (qtyToProduce > 0) {
-                    suggestedProduction.put(product.name, qtyToProduce);
+                    suggestedProduction.put(product.getName(), qtyToProduce);
                 }
             }
             totalValue = objective.value();
-        } else {
-            System.err.println("O solver não conseguiu encontrar uma solução ideal.");
         }
 
         return new ProductionSuggestionDTO(suggestedProduction, totalValue);

@@ -12,11 +12,20 @@ import jakarta.validation.constraints.NotBlank;
 public class RawMaterial extends PanacheEntity {
     @NotBlank
     @Column(unique = true)
-    public String code;
+    private String code;
 
     @NotBlank
-    public String name;
+    private String name;
 
     @Min(0)
-    public Double quantity;
+    private Double quantity;
+
+    public String getCode() { return code; }
+    public void setCode(String code) { this.code = code; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public Double getQuantity() { return quantity; }
+    public void setQuantity(Double quantity) { this.quantity = quantity; }
 }

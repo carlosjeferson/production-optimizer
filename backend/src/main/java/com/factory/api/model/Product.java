@@ -13,16 +13,28 @@ import java.util.ArrayList;
 public class Product extends PanacheEntity {
     @NotBlank
     @Column(unique = true)
-    public String code;
+    private String code;
 
     @NotBlank
-    public String name;
+    private String name;
 
     @Min(0)
-    public Double price;
+    private Double price;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id")
     @Valid
-    public List<ProductComposition> composition = new ArrayList<>();
+    private List<ProductComposition> composition = new ArrayList<>();
+
+    public String getCode() { return code; }
+    public void setCode(String code) { this.code = code; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public Double getPrice() { return price; }
+    public void setPrice(Double price) { this.price = price; }
+
+    public List<ProductComposition> getComposition() { return composition; }
+    public void setComposition(List<ProductComposition> composition) { this.composition = composition; }
 }

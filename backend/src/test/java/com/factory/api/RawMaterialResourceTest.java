@@ -26,9 +26,9 @@ public class RawMaterialResourceTest {
     @Test
     public void testFullRawMaterialLifecycle() {
         RawMaterial material = new RawMaterial();
-        material.code = "RM-99";
-        material.name = "Aço Inox";
-        material.quantity = 50.0;
+        material.setCode("RM-99");
+        material.setName("Aço Inox");
+        material.setQuantity(50.0);
 
         Long id = Long.valueOf(given()
                 .contentType(ContentType.JSON)
@@ -46,7 +46,7 @@ public class RawMaterialResourceTest {
                 .body("size()", is(1))
                 .body("[0].name", is("Aço Inox"));
 
-        material.name = "Aço Inox Escovado";
+        material.setName("Aço Inox Escovado");
         given()
                 .contentType(ContentType.JSON)
                 .body(material)
@@ -58,11 +58,15 @@ public class RawMaterialResourceTest {
         given()
                 .when().delete("/raw-materials/" + id)
                 .then()
-                .statusCode(204);
+                .statusCode(expectedDeleteStatus());
 
         given()
                 .when().get("/raw-materials")
                 .then()
                 .body("size()", is(0));
+    }
+
+    private int expectedDeleteStatus() {
+        return 204;
     }
 }

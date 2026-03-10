@@ -39,9 +39,10 @@ public class RawMaterialResource {
         RawMaterial entity = RawMaterial.findById(id);
         if(entity == null) throw new NotFoundException();
 
-        entity.code = material.code;
-        entity.name = material.name;
-        entity.quantity = material.quantity;
+        entity.setCode(material.getCode());
+        entity.setName(material.getName());
+        entity.setQuantity(material.getQuantity());
+
         return entity;
     }
 }

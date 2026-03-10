@@ -35,16 +35,16 @@ public class ProductResource {
             throw new NotFoundException("Product not found with id: " + id);
         }
 
-        entity.code = product.code;
-        entity.name = product.name;
-        entity.price = product.price;
+        entity.setCode(product.getCode());
+        entity.setName(product.getName());
+        entity.setPrice(product.getPrice());
 
-        entity.composition.clear();
+        entity.getComposition().clear();
 
-        if (product.composition != null) {
-            for (ProductComposition newComp : product.composition) {
+        if (product.getComposition() != null) {
+            for (ProductComposition newComp : product.getComposition()) {
                 newComp.persist();
-                entity.composition.add(newComp);
+                entity.getComposition().add(newComp);
             }
         }
 

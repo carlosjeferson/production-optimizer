@@ -27,9 +27,9 @@ public class ProductResourceTest {
         RawMaterial.deleteAll();
 
         RawMaterial rm = new RawMaterial();
-        rm.code = "BASE-01";
-        rm.name = "Base de Ferro";
-        rm.quantity = 100.0;
+        rm.setCode("BASE-01");
+        rm.setName("Base de Ferro");
+        rm.setQuantity(100.0);
         rm.persist();
         materialId = rm.id;
     }
@@ -37,17 +37,18 @@ public class ProductResourceTest {
     @Test
     public void testFullProductLifecycle() {
         Product product = new Product();
-        product.code = "PROD-01";
-        product.name = "Mesa Industrial";
-        product.price = 500.0;
+        product.setCode("PROD-01");
+        product.setName("Mesa Industrial");
+        product.setPrice(500.0);
 
         ProductComposition comp = new ProductComposition();
         RawMaterial ref = new RawMaterial();
         ref.id = materialId;
-        comp.rawMaterial = ref;
-        comp.requiredQuantity = 2.0;
 
-        product.composition = List.of(comp);
+        comp.setRawMaterial(ref);
+        comp.setRequiredQuantity(2.0);
+
+        product.setComposition(List.of(comp));
 
         Long productId = Long.valueOf(given()
                 .contentType(ContentType.JSON)
@@ -59,8 +60,8 @@ public class ProductResourceTest {
                 .body("composition.size()", is(1))
                 .extract().path("id").toString());
 
-        product.name = "Mesa Industrial Premium";
-        product.price = 750.0;
+        product.setName("Mesa Industrial Premium");
+        product.setPrice(750.0);
 
         given()
                 .contentType(ContentType.JSON)

@@ -9,7 +9,14 @@ import jakarta.persistence.Table;
 @Table(name = "product_compositions")
 public class ProductComposition extends PanacheEntity {
     @ManyToOne
-    public RawMaterial rawMaterial;
+    private RawMaterial rawMaterial;
 
-    public Double requiredQuantity;
+    private Double requiredQuantity;
+
+    // Getters e Setters
+    public RawMaterial getRawMaterial() { return rawMaterial; }
+    public void setRawMaterial(RawMaterial rawMaterial) { this.rawMaterial = rawMaterial; }
+
+    public Double getRequiredQuantity() { return requiredQuantity; }
+    public void setRequiredQuantity(Double requiredQuantity) { this.requiredQuantity = requiredQuantity; }
 }
