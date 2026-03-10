@@ -1,127 +1,73 @@
-# 🏭 Gerenciamento e Otimização de Produção Industrial
+# 🏭 Production Optimizer: Inteligência Industrial & Otimização de Lucro
 
-Este projeto é uma solução Full-Stack desenvolvida para otimizar a linha de produção de uma fábrica. O sistema gerencia o estoque de matérias-primas e a composição de produtos, possuindo um motor de otimização que analisa o inventário atual e sugere o plano de produção ideal para obter o **maior lucro possível**, resolvendo conflitos de insumos de forma inteligente.
+Este projeto é uma solução Full-Stack de alto nível desenvolvida para resolver um dos maiores desafios da gestão industrial: a **alocação otimizada de recursos**. O sistema não apenas gerencia o estoque, mas utiliza um motor de **Programação Linear** para decidir matematicamente o que produzir para maximizar o retorno financeiro.
 
-## 🚀 Tecnologias Utilizadas
+## 🧠 O Diferencial de P&D: Motor de Otimização
 
-O projeto foi construído seguindo boas práticas de Clean Code, com separação clara de responsabilidades e alta cobertura de testes.
+Diferente de abordagens baseadas em regras simples (como ordenar por preço), este projeto utiliza o **Google OR-Tools** com o solver **SCIP**.
 
-### 🔙 Back-end
-* **Linguagem:** Java 21
-* **Framework:** Quarkus (com RESTEasy Jackson e Arc)
-* **Banco de Dados:** PostgreSQL (com Quarkus Hibernate ORM Panache)
-* **Otimização Matemática:** Google OR-Tools (Programação Linear)
-* **Documentação da API:** OpenAPI / Swagger
-* **Testes:** JUnit 5 e REST Assured
-* **Arquitetura:** Padrões DTO, Model, Exception Handler Global, Resource (Controllers) e Service.
-
-### 💻 Front-end
-* **Framework:** Vue.js 3
-* **Build Tool:** Vite
-* **Requisições HTTP:** Axios
-* **Estilização:** CSS Puro (sem frameworks externos para maior controle)
-* **Testes E2E:** Cypress (com mockagem de dados)
+* **Problema Resolvido:** Otimização Combinatória (Variação do Problema da Mochila Multidimensional).
+* **Inteligência:** O algoritmo analisa simultaneamente múltiplos produtos que competem pelos mesmos insumos limitados, resolvendo conflitos para encontrar o cenário de **lucro global máximo**, e não apenas local.
 
 ---
 
-## ✨ Funcionalidades
+## 🚀 Tecnologias e Arquitetura
 
-* **Gestão de Matérias-Primas:** CRUD completo (Cadastro, Edição, Listagem e Remoção) de insumos e suas quantidades em estoque.
-* **Gestão de Produtos:** CRUD de produtos, definindo valor de venda e a "receita" (quais matérias-primas e quantidades são necessárias para fabricar 1 unidade).
-* **Cálculo de Produção (Motor de Otimização):** O coração da aplicação. Uma funcionalidade que processa o estoque atual e a composição dos produtos utilizando o **Google OR-Tools** para calcular a combinação exata de produtos a serem fabricados, garantindo o maior retorno financeiro possível sem ultrapassar o estoque disponível.
-* **Tratamento de Erros:** Exceções globais tratadas no back-end, retornando mensagens claras para a interface.
+O projeto foi construído focando em **escalabilidade** e **integridade de domínio**.
+
+### 🔙 Back-end (Robustez e Segurança)
+
+* **Java 21 & Quarkus:** Utilização de recursos modernos da linguagem.
+* **Encapsulamento e OO:** Domínio refatorado para garantir a integridade dos dados, utilizando campos privados e métodos de acesso controlados.
+* **Google OR-Tools:** Implementação de pesquisa operacional para tomada de decisão.
+* **Persistência:** Hibernate com Panache e PostgreSQL para gestão relacional.
+
+### 💻 Front-end (Experiência e Agilidade)
+
+* **Vue.js 3 & Vite:** Interface reativa e performática.
+* **CSS Puro:** Design customizado sem dependências pesadas, focado em clareza de dados industriais.
 
 ---
 
-<img width="1902" height="908" alt="image" src="https://github.com/user-attachments/assets/73ee023f-3691-4290-a01c-2f53bbd77e1b" />
-<img width="1900" height="904" alt="image" src="https://github.com/user-attachments/assets/27fb7c85-ab82-44fa-b16b-6a24260546d8" />
-<img width="1889" height="895" alt="image" src="https://github.com/user-attachments/assets/3b281184-8ab1-429b-8b96-1c0734583a1e" />
+## 🧪 Estratégia de Qualidade (Testes)
 
+A cobertura de testes foi desenhada para validar desde o contrato da API até a precisão matemática do algoritmo.
 
-## 🛠️ Como executar o projeto localmente
+* **Testes de Lógica (JUnit 5):** Validam cenários de conflito de insumos, garantindo que o solver escolha sempre a opção de maior valor total (ROI).
+* **Testes de Integração (REST Assured):** Validam o ciclo completo de vida das entidades (CRUD) e a comunicação HTTP.
+* **Testes E2E (Cypress):** Simulam a jornada do usuário final na interface, garantindo que o fluxo de otimização seja intuitivo e funcional.
 
-### Pré-requisitos
-Certifique-se de ter instalado em sua máquina:
-* **Java 21+** e **Maven**
-* **Node.js** (versão 22+ recomendada) e **NPM** 10+
-* **PostgreSQL** rodando localmente (ou via Docker)
+---
 
-### 1. Rodando o Back-end (Quarkus)
+## 🛠️ Execução Local
 
-1. Clone o repositório:
+### 1. Back-end
 
 ```bash
-git clone https://github.com/carlosjeferson/production-optimizer.git ou https://github.com/carlosjeferson/production-optimizer
-```
+# Clone o repositório
+git clone https://github.com/carlosjeferson/production-optimizer.git
+cd production-optimizer/backend
 
-2. Acesse a pasta do back-end (ajuste o nome da pasta conforme seu projeto):
-```bash
-cd backend
-```
-
-
-3. Configure as credenciais do banco de dados no arquivo `src/main/resources/application.properties`:
-```properties
-quarkus.datasource.jdbc.url=jdbc:postgresql://localhost:5432/nome_do_banco
-quarkus.datasource.username=seu_usuario
-quarkus.datasource.password=sua_senha
-quarkus.hibernate-orm.database.generation=update
-```
-
-
-4. Inicie o servidor em modo de desenvolvimento:
-```bash
+# Configure o application.properties com seu banco PostgreSQL local
 mvn compile quarkus:dev
+
 ```
 
+### 2. Front-end
 
-*A API estará rodando em `http://localhost:8080` (A documentação Swagger geralmente fica em `http://localhost:8080/q/swagger-ui`).*
-
-### 2. Rodando o Front-end (Vue.js)
-
-1. Abra um novo terminal e acesse a pasta do front-end:
 ```bash
-cd frontend
-```
-
-
-2. Instale as dependências:
-```bash
+cd ../frontend
 npm install
-```
-
-
-3. Inicie o servidor de desenvolvimento:
-```bash
 npm run dev
+
 ```
-
-
-*A aplicação estará disponível em `http://localhost:5173`.*
 
 ---
 
-## 🧪 Como rodar os Testes
+## 📊 Exemplos de Otimização
 
-A qualidade do software foi garantida através de testes em ambas as camadas.
+| Cenário | Estoque | Produto A (R$ 100) | Produto B (R$ 60) | Resultado do Solver |
+| --- | --- | --- | --- | --- |
+| **Simples** | 10 Madeiras | Gasta 10 | Gasta 5 | **2x Produto B (Total R$ 120)** |
 
-* **Back-end (Testes Unitários e de Integração):**
-Na pasta do back-end, execute:
-```bash
-mvn test
-```
-
-
-*Isto executará os testes de CRUD, validações e a lógica matemática do Cálculo de Produção usando JUnit 5 e REST Assured.*
-* **Front-end (Testes E2E com Cypress):**
-Na pasta do front-end, execute:
-```bash
-npx cypress open
-```
-
-
-*Isto abrirá a interface do Cypress. Selecione "E2E Testing" para rodar os cenários de `engenharia_produtos.cy.js` e `insumos.cy.js`. Os testes utilizam mockagem de dados para garantir isolamento e rapidez.*
-
----
-
-Desenvolvido com dedicação para o desafio técnico de P&D.
+*O sistema percebe que fabricar duas unidades de menor valor unitário gera um lucro total maior do que uma unidade de valor alto, otimizando o uso da matéria-prima.*
