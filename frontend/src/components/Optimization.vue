@@ -15,13 +15,13 @@
         <div class="banner-content">
           <div class="banner-text">
             <h3>Gerar Novo Plano de Produção</h3>
-            <p>O algoritmo analisará o estoque atual e priorizará os produtos de maior valor para sugerir o cenário mais lucrativo.</p>
+            <p>O motor de otimização resolverá conflitos de insumos para calcular a combinação de produtos que maximiza o lucro global.</p>
           </div>
           <button @click="runOptimization" class="btn-premium btn-calculate" :disabled="isLoading">
             <span v-if="isLoading" class="spinner-small"></span>
             <span v-else>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-btn"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
-              Calcular Melhor Cenário
+              Calcular Mix de Produção Ideal
             </span>
           </button>
         </div>
