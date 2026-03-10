@@ -4,77 +4,71 @@ import com.factory.api.dto.ProductionSuggestionDTO;
 import com.factory.api.model.Product;
 import com.factory.api.model.ProductComposition;
 import com.factory.api.model.RawMaterial;
-import com.google.ortools.Loader;
-import com.google.ortools.linearsolver.MPConstraint;
-import com.google.ortools.linearsolver.MPObjective;
-import com.google.ortools.linearsolver.MPSolver;
-import com.google.ortools.linearsolver.MPVariable;
-import jakarta.enterprise.context.ApplicationScoped;
+import com.factory.api.service.ProductionService;
+import io.quarkus.test.junit.QuarkusTest;
+import jakarta.inject.Inject;
+import org.junit.jupiter.api.Test;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import static org.junit.jupiter.api.Assertions.*;
 
-@ApplicationScoped
+@QuarkusTest
 public class ProductionServiceTest {
 
-    public ProductionSuggestionDTO calculateOptimalProduction() {
-        Loader.loadNativeLibraries();
+    @Inject
+    ProductionService productionService;
 
-        MPSolver solver = MPSolver.createSolver("SCIP");
-        if (solver == null) {
-            throw new RuntimeException("Não foi possível inicializar o Solver SCIP.");
-        }
+    @Test
+    public void testCalculateOptimalProduction() {
 
-        List<Product> products = Product.listAll();
-        List<RawMaterial> inventory = RawMaterial.listAll();
+        RawMaterial wood = new RawMaterial();
+        wood.name = "Wood";
+        wood.code = "RM-101";
+        wood.quantity = 100.0;
 
-        Map<Product, MPVariable> productVariables = new HashMap<>();
-        for (Product product : products) {
-            MPVariable var = solver.makeIntVar(0.0, Double.POSITIVE_INFINITY, product.name);
-            productVariables.put(product, var);
-        }
+        RawMaterial steel = new RawMaterial();
+        steel.name = "Steel";
+        steel.code = "RM-102";
+        steel.quantity = 100.0;
 
-        Map<Long, MPConstraint> inventoryConstraints = new HashMap<>();
-        for (RawMaterial material : inventory) {
-            MPConstraint constraint = solver.makeConstraint(0.0, material.quantity, "Material_" + material.id);
-            inventoryConstraints.put(material.id, constraint);
-        }
+        Product product = new Product();
+        product.name = "Car";
+        product.code = "CAR01";
+        product.price = 1000.0;
 
-        for (Product product : products) {
-            MPVariable productVar = productVariables.get(product);
-            for (ProductComposition comp : product.composition) {
-                MPConstraint constraint = inventoryConstraints.get(comp.rawMaterial.id);
-                if (constraint != null) {
-                    constraint.setCoefficient(productVar, comp.requiredQuantity);
-                }
-            }
-        }
+        Product product2 = new Product();
+        product2.name = "Car 2";
+        product2.code = "CAR02";
+        product2.price = 1400.0;
 
-        MPObjective objective = solver.objective();
-        for (Product product : products) {
-            double priorityWeight = product.price - 0.0001;
-            objective.setCoefficient(productVariables.get(product), priorityWeight);
-        }
-        objective.setMaximization();
+        Product product3 = new Product();
+        product3.name = "Car 3";
+        product3.code = "CAR02";
+        product3.price = 1100.0;
 
-        MPSolver.ResultStatus resultStatus = solver.solve();
+        ProductComposition comp = new ProductComposition();
+        comp.rawMaterial = steel;
+        comp.requiredQuantity = 10.0;
 
-        Map<String, Integer> suggestedProduction = new HashMap<>();
-        double totalRealValue = 0.0;
+        ProductComposition comp2 = new ProductComposition();
+        comp2.rawMaterial = steel;
+        comp2.requiredQuantity = 8.0;
 
-        if (resultStatus == MPSolver.ResultStatus.OPTIMAL || resultStatus == MPSolver.ResultStatus.FEASIBLE) {
-            for (Product product : products) {
-                int qtyToProduce = (int) productVariables.get(product).solutionValue();
-                if (qtyToProduce > 0) {
-                    suggestedProduction.put(product.name, qtyToProduce);
-                    totalRealValue += (qtyToProduce * product.price);
-                }
-            }
-        } else {
-            System.err.println("O solver não conseguiu encontrar uma solução ideal.");
-        }
+        ProductComposition comp3 = new ProductComposition();
+        comp3.rawMaterial = wood;
+        comp3.requiredQuantity = 10.0;
 
-        return new ProductionSuggestionDTO(suggestedProduction, totalRealValue);
+        ProductComposition comp4 = new ProductComposition();
+        comp4.rawMaterial = wood;
+        comp4.requiredQuantity = 8.0;
+
+        product.composition.add(comp);
+        product2.composition.add(comp2);
+        product2.composition.add(comp3);
+        product3.composition.add(comp4);
+
+        ProductionSuggestionDTO result = productionService.calculateOptimalProduction();
+
+        assertNotNull(result);
+        assertTrue(result.totalEstimatedValue  >= 0);
     }
 }

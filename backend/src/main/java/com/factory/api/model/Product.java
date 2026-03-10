@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import java.util.List;
+import java.util.ArrayList;
 
 @Entity
 @Table(name = "products")
@@ -23,5 +24,5 @@ public class Product extends PanacheEntity {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id")
     @Valid
-    public List<ProductComposition> composition;
+    public List<ProductComposition> composition = new ArrayList<>();
 }
